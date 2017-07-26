@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">MoneyLeft</string>\
+
+    <string name="money_left_prompt">How much money you\'ve got left?</string>
+    <string name="button_cancel_text">Cancel</string>
+    <string name="button_accept_text">Accept</string>
+    <string name="no_value"></string>
+    <string name="shared_prefs">com.kryx07.moneyleft.SHARED_PREFS</string>
+    <string name="save">Save</string>
+
+
+    <string name="input_text">INPUT_TEXT</string>
+    <string name="money_per_day_amount">MONEY_PER_DAY</string>
+    <string name="today">Today:</string>
+    <string name="paycheck">Paycheck:</string>
+    <string name="money_left">Money left:</string>
+    <string name="days_left">Days left:</string>
+
+
+</resources>
