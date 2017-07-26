@@ -18,15 +18,31 @@ object ODateCalculator {
         return (LocalDate(year, month, day))
     }
 
-    fun getDaysDiff(date1: LocalDate, date2: LocalDate): Int {
+    fun getInclusiveDaysDiff(date1: LocalDate, date2: LocalDate): Int {
         Timber.e("Thread Check" + Thread.currentThread().id)
 
-        return (Days.daysBetween(date1, date2).days)
+        return (Days.daysBetween(date1, date2).days) + 1
     }
 
     fun getDaysCountToEndOfMonth(): Int {
         Timber.e("Thread Check" + Thread.currentThread().id)
 
-        return (getDaysDiff(LocalDate.now(), getLastDayOfMonth(LocalDate.now())))
+        return (getInclusiveDaysDiff(LocalDate.now(), getLastDayOfMonth(LocalDate.now())))
+    }
+
+    fun getPayDate(today: LocalDate): LocalDate {
+        val PAY_DAY = 28
+        val DECEMBER = 12
+        val JANUARY = 1
+
+        if (today.dayOfMonth < PAY_DAY) {
+            return today.withDayOfMonth(PAY_DAY)
+        } else {
+            if (today.monthOfYear != DECEMBER) {
+                return today.withDayOfMonth(PAY_DAY).withMonthOfYear(today.monthOfYear + 1)
+            } else {
+                return today.withDayOfMonth(PAY_DAY).withMonthOfYear(JANUARY)
+            }
+        }
     }
 }

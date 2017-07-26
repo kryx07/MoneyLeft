@@ -15,6 +15,10 @@ import org.nfunk.jep.JEP
 import java.math.BigDecimal
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import android.appwidget.AppWidgetManager
+import android.content.Intent
+import com.kryx07.moneyleft.widget.NewAppWidget
+
 
 class InputActivity : AppCompatActivity() {
 
@@ -30,7 +34,7 @@ class InputActivity : AppCompatActivity() {
 
         Timber.e(App.app.toString())
         Timber.e("Thread Check" + Thread.currentThread().id)
-      // Timber.e(jep.evaluate(jep.parse("2+2")).toString())
+        // Timber.e(jep.evaluate(jep.parse("2+2")).toString())
 
 
         money_input.addTextChangedListener(object : TextWatcher {
@@ -51,6 +55,7 @@ class InputActivity : AppCompatActivity() {
         super.onStart()
         showDates()
         readInput()
+        updateWidget()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -65,6 +70,7 @@ class InputActivity : AppCompatActivity() {
             Timber.e("menu clicked")
             getDiff()
             writeInput()
+            updateWidget()
             return true
         }
 
@@ -81,7 +87,9 @@ class InputActivity : AppCompatActivity() {
         val executor: ExecutorService = Executors.newCachedThreadPool()
         executor.submit {
             moneyLeft = BigDecimal(jep.evaluate(jep.parse(input)).toString())
-            moneyPerDay = OMoneyCalculator.getMoneyLeftPerDay(ODateCalculator.getDaysCountToEndOfMonth(), moneyLeft)
+            moneyPerDay = OMoneyCalculator
+                    .getMoneyLeftPerDay(
+                            ODateCalculator.getInclusiveDaysDiff(today(), ODateCalculator.getPayDate(today())), moneyLeft)
         }
         executor.shutdown()
 
@@ -95,11 +103,12 @@ class InputActivity : AppCompatActivity() {
     }
 
     private fun showDates() {
-        val paycheckDay = ODateCalculator.getLastDayOfMonth(today())
-
+//        val paycheckDay = ODateCalculator.getLastDayOfMonth(today())
+        val paycheckDay = ODateCalculator.getPayDate(today())
+        val diff = ODateCalculator.getInclusiveDaysDiff(today(), paycheckDay)
         today_text.text = today().toString()
         paycheck_text.text = paycheckDay.toString()
-        days_left_text.text = ODateCalculator.getDaysDiff(today(), paycheckDay).toString()
+        days_left_text.text = ODateCalculator.getInclusiveDaysDiff(today(), paycheckDay).toString()
     }
 
     private fun writeInput() {
@@ -123,6 +132,16 @@ class InputActivity : AppCompatActivity() {
 
     private fun today(): LocalDate {
         return LocalDate.now()
+    }
+
+    private fun updateWidget() {
+        val intent = Intent(this, NewAppWidget::class.java)
+        intent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+// Use an array and EXTRA_APPWIDGET_IDS instead of AppWidgetManager.EXTRA_APPWIDGET_ID,
+// since it seems the onUpdate() is only fired on that:
+        val ids = intArrayOf(18)
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
+        sendBroadcast(intent)
     }
 }
 
