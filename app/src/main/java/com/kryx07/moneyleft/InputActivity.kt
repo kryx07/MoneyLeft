@@ -17,6 +17,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import android.appwidget.AppWidgetManager
 import android.content.Intent
+import android.widget.Button
 import com.kryx07.moneyleft.widget.NewAppWidget
 
 
@@ -49,6 +50,12 @@ class InputActivity : AppCompatActivity() {
             }
         })
 
+        var i: Int = 1
+        while (i <= 16) {
+            setListenerByButton(findViewById(resources.getIdentifier("button_" + i, "id", this.packageName)) as Button)
+            i++
+        }
+
     }
 
     override fun onStart() {
@@ -56,6 +63,7 @@ class InputActivity : AppCompatActivity() {
         showDates()
         readInput()
         updateWidget()
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -105,7 +113,7 @@ class InputActivity : AppCompatActivity() {
     private fun showDates() {
 //        val paycheckDay = ODateCalculator.getLastDayOfMonth(today())
         val paycheckDay = ODateCalculator.getPayDate(today())
-        val diff = ODateCalculator.getInclusiveDaysDiff(today(), paycheckDay)
+        //val diff = ODateCalculator.getInclusiveDaysDiff(today(), paycheckDay)
         today_text.text = today().toString()
         paycheck_text.text = paycheckDay.toString()
         days_left_text.text = ODateCalculator.getInclusiveDaysDiff(today(), paycheckDay).toString()
@@ -114,7 +122,7 @@ class InputActivity : AppCompatActivity() {
     private fun writeInput() {
         val executor: ExecutorService = Executors.newSingleThreadExecutor()
         executor.submit {
-            sharedPrefs.write(R.string.input_text, money_input.text.toString())
+            sharedPrefs.write(R.string.input_text, money_input.text.toString())//+ " = " + BigDecimal(jep.evaluate(jep.parse(money_input.text.toString())).toString()))
             sharedPrefs.write(R.string.money_per_day_amount, money_per_day_text.text.toString())
         }
         executor.shutdown()
@@ -142,6 +150,27 @@ class InputActivity : AppCompatActivity() {
         val ids = intArrayOf(18)
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
         sendBroadcast(intent)
+    }
+
+
+    private fun setListenerByButton(button: Button) {
+
+        if (button.text != "" && button.text != "=" && button.text != "<=") {
+            button.setOnClickListener {
+                money_input.text = money_input.text.toString() + button.text.toString()
+            }
+        } else if (button.text == getString(R.string.backspace)) {
+            button.setOnClickListener {
+                if (money_input.text.isNotEmpty()) {
+                    money_input.text = money_input.text.toString().substring(0, money_input.text.toString().length - 1)
+                }
+            }
+        } else if (button.text == "=") {
+            button.setOnClickListener {
+                getDiff()
+            }
+        }
+
     }
 }
 

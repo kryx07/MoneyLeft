@@ -16,5 +16,7 @@
     <string name="money_left">Money left:</string>
     <string name="days_left">Days left:</string>
 
+    <string name="backspace">\u003c=</string>
+
 
 </resources>

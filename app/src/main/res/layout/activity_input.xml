@@ -6,20 +6,49 @@
     android:layout_height="match_parent"
     tools:context="com.kryx07.moneyleft.InputActivity">
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/money_input_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp">
+    <TextView
+        android:id="@+id/prompt"
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/money_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_standard"
+        android:paddingStart="@dimen/margin_standard"
+        android:text="@string/money_left_prompt"
+
+        />
+
+    <!--
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/money_input_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/money_left_prompt"
-            android:inputType="phone" />
+            android:layout_below="@id/prompt"
+            android:padding="16dp">
+    -->
 
-    </android.support.design.widget.TextInputLayout>
+    <!--<android.support.design.widget.TextInputEditText
+        android:id="@+id/money_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/money_left_prompt"
+        android:inputType="phone" />-->
+
+
+    <TextView
+        android:id="@+id/money_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/prompt"
+        android:padding="@dimen/margin_standard"
+        android:text=""
+        android:textSize="24sp"
+
+        android:textStyle="bold"
+
+        />
+
+
+    <!--</android.support.design.widget.TextInputLayout>-->
 
     <!-- <TextView
          android:id="@+id/text_result"
@@ -30,7 +59,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/money_input_layout"
+        android:layout_below="@id/money_input"
         android:layout_margin="@dimen/margin_standard"
         android:orientation="vertical">
 
@@ -145,6 +174,134 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:columnCount="4"
+        android:rowCount="4"
+
+        >
+
+
+        <Button
+            android:id="@+id/button_1"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1" />
+
+        <Button
+            android:id="@+id/button_2"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2" />
+
+        <Button
+            android:id="@+id/button_3"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3" />
+
+        <Button
+            android:id="@+id/button_4"
+            style="@style/button"
+            android:text="@string/backspace" />
+
+
+        <Button
+            android:id="@+id/button_5"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4" />
+
+        <Button
+            android:id="@+id/button_6"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5" />
+
+        <Button
+            android:id="@+id/button_7"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="6" />
+
+        <Button
+            android:id="@+id/button_8"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+" />
+
+        <Button
+            android:id="@+id/button_9"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="7" />
+
+        <Button
+            android:id="@+id/button_10"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="8" />
+
+        <Button
+            android:id="@+id/button_11"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="9" />
+
+        <Button
+            android:id="@+id/button_12"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-" />
+
+        <Button
+            android:id="@+id/button_13"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+        <Button
+            android:id="@+id/button_14"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0" />
+
+
+        <Button
+            android:id="@+id/button_15"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="." />
+
+        <Button
+            android:id="@+id/button_16"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorAccent"
+            android:text="="
+            android:textColor="@color/white" />
+
+
+    </GridLayout>
 
     <!--<TextView
         android:id="@+id/view_partitioner"

@@ -8,4 +8,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="button" parent="@android:style/Widget.Button">
+
+        <item name="android:textSize">@dimen/large_font</item>
+
+        <item name="android:height">65dp</item>
+    </style>
+
 </resources>
