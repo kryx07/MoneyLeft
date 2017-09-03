@@ -17,6 +17,8 @@
     <string name="days_left">Days left:</string>
 
     <string name="backspace">\u003c=</string>
+    <string name="calculated_input">CALCULATED INPUT</string>
+    <string name="pln_currency">PLN</string>
 
 
 </resources>

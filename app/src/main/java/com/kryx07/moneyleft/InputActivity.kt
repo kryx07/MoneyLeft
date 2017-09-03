@@ -19,6 +19,11 @@ import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.widget.Button
 import com.kryx07.moneyleft.widget.NewAppWidget
+import java.math.MathContext
+import java.math.RoundingMode
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.*
 
 
 class InputActivity : AppCompatActivity() {
@@ -38,19 +43,7 @@ class InputActivity : AppCompatActivity() {
         // Timber.e(jep.evaluate(jep.parse("2+2")).toString())
 
 
-        money_input.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                //getDiff()
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-        })
-
-        var i: Int = 1
+        var i = 1
         while (i <= 16) {
             setListenerByButton(findViewById(resources.getIdentifier("button_" + i, "id", this.packageName)) as Button)
             i++
@@ -66,13 +59,13 @@ class InputActivity : AppCompatActivity() {
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    /*override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_input, menu)
         return super.onCreateOptionsMenu(menu)
     }
+*/
 
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    /*override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_input_add_item) {
             //do sth
             Timber.e("menu clicked")
@@ -83,7 +76,7 @@ class InputActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
-    }
+    }*/
 
     fun getDiff() {
         Timber.e("Thread Check" + Thread.currentThread().id)
@@ -94,7 +87,7 @@ class InputActivity : AppCompatActivity() {
 
         val executor: ExecutorService = Executors.newCachedThreadPool()
         executor.submit {
-            moneyLeft = BigDecimal(jep.evaluate(jep.parse(input)).toString())
+            moneyLeft = BigDecimal(jep.evaluate(jep.parse(input)).toString()).round(MathContext(2, RoundingMode.CEILING));
             moneyPerDay = OMoneyCalculator
                     .getMoneyLeftPerDay(
                             ODateCalculator.getInclusiveDaysDiff(today(), ODateCalculator.getPayDate(today())), moneyLeft)
@@ -123,19 +116,34 @@ class InputActivity : AppCompatActivity() {
         val executor: ExecutorService = Executors.newSingleThreadExecutor()
         executor.submit {
             sharedPrefs.write(R.string.input_text, money_input.text.toString())//+ " = " + BigDecimal(jep.evaluate(jep.parse(money_input.text.toString())).toString()))
+            val df = DecimalFormat("", DecimalFormatSymbols(Locale.CANADA))
+            df.maximumFractionDigits = 2
+            df.minimumFractionDigits = 2
+
+            df.isGroupingUsed = false
+            val calculatedInput = df.format(BigDecimal(jep.evaluate((jep).parse(money_input.text.toString())).toString()))
+            sharedPrefs.write(R.string.calculated_input, calculatedInput)
             sharedPrefs.write(R.string.money_per_day_amount, money_per_day_text.text.toString())
         }
         executor.shutdown()
+        while (!executor.isTerminated) {
 
+        }
     }
 
     private fun readInput() {
         val executor: ExecutorService = Executors.newSingleThreadExecutor()
         executor.submit {
-            money_left_text.text = sharedPrefs.read(R.string.input_text)
-            money_per_day_text.text = sharedPrefs.read(R.string.money_per_day_amount)
+
+            //money_left_text.text = jep.evaluate(jep.parse(sharedPrefs.read(R.string.input_text))) as CharSequence?
+            //money_left_text.text = sharedPrefs.read(R.string.input_text)
+            money_left_text.text = sharedPrefs.read(R.string.calculated_input) + " " + getString(R.string.pln_currency)
+            money_per_day_text.text = sharedPrefs.read(R.string.money_per_day_amount) + " " + getString(R.string.pln_currency)
         }
         executor.shutdown()
+        while (!executor.isTerminated) {
+
+        }
     }
 
     private fun today(): LocalDate {
@@ -155,7 +163,7 @@ class InputActivity : AppCompatActivity() {
 
     private fun setListenerByButton(button: Button) {
 
-        if (button.text != "" && button.text != "=" && button.text != "<=") {
+        if (button.text != "" && button.text != "=" && button.text != "<=" && button.text != "C") {
             button.setOnClickListener {
                 money_input.text = money_input.text.toString() + button.text.toString()
             }
@@ -168,6 +176,12 @@ class InputActivity : AppCompatActivity() {
         } else if (button.text == "=") {
             button.setOnClickListener {
                 getDiff()
+                writeInput()
+                readInput()
+            }
+        } else if (button.text == "C") {
+            button.setOnClickListener {
+                money_input.text = ""
             }
         }
 
